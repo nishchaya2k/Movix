@@ -4,7 +4,7 @@ import {fetchDataFromApi} from "./utils/api"
 //method we need to destructure
 
 import { useSelector,useDispatch } from 'react-redux';
-import { getApiConfiguration } from './store/homeSlice';
+import { getApiConfiguration,getGenres } from './store/homeSlice';
 
 import Header from "./components/header/Header";
 import Footer from "./components/footer/Footer";
@@ -22,6 +22,7 @@ function App() {
 
     useEffect(() => {
       fetchApiConfig();
+      genresCall();
     }, []);
 
     const fetchApiConfig = () => {
@@ -37,7 +38,24 @@ function App() {
             dispatch(getApiConfiguration(url));
         });
     };
-    
+    //promise.all for calling multiple api's
+    const genresCall = async() => {
+        let promises = [];
+        let endpoints = ["tv","movie"]
+        let allGenres = {}
+        
+        endpoints.forEach((url) => {     //url is iterator name
+          promises.push(fetchDataFromApi(`/genre/${url}/list`))  
+        })
+
+        const data = await Promise.all(promises) //promise.all will not return untill it will not get the response of all api calls (currently we have two endpoints)
+        console.log(data);
+        data.map(({genres}) => {       //we will destructure the genres
+            return genres.map((item) => (allGenres[item.id]= item));
+        });
+
+        dispatch(getGenres(allGenres));
+    } 
     return (
       <BrowserRouter>
           <Header/>
