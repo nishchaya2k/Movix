@@ -1,5 +1,5 @@
 import React from 'react'
-import { UseSelector, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 const Genres = ({data}) => {
     const {genres}  = useSelector((state) => state.home)
