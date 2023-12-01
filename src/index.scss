@@ -23,7 +23,8 @@
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+  box-sizing: border-box;     //eg. when we give padding, size of boz remains same
+  //The box-sizing CSS property sets how the total width and height of an element is calculated.
 }
 
 body {

@@ -30,7 +30,7 @@
     .carouselLeftNav {
         left: 30px;
     }
-    .carouselRighttNav {
+    .carouselRightNav { 
         right: 30px;
     }
     .loadingSkeleton {
@@ -92,6 +92,7 @@
         .carouselItem {
             width: 125px;
             cursor: pointer;
+            // border: 5px solid white;
             @include md {
                 width: calc(25% - 15px);
             }
@@ -101,6 +102,7 @@
             flex-shrink: 0;
             .posterBlock {
                 position: relative;
+                // border: 5px solid black;
                 width: 100%;
                 aspect-ratio: 1 / 1.5;
                 background-size: cover;

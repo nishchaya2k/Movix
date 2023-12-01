@@ -7,7 +7,7 @@
         font-weight: 700;
         fill: var(--black);
     }
-    .CircularProgressbar-trail {
-        stroke: transparent;
+    .CircularProgressbar-trail {        //represent (maxValue-rating ) data
+        stroke: transparent;            //can set color also in place of it
     }
 }

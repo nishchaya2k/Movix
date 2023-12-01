@@ -1,10 +1,9 @@
-import { useState,useEffect } from 'react'
-import { BrowserRouter,Routes,Route } from 'react-router-dom';
-import {fetchDataFromApi} from "./utils/api"
-//method we need to destructure
+import { useState, useEffect } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { fetchDataFromApi } from "./utils/api";
 
-import { useSelector,useDispatch } from 'react-redux';
-import { getApiConfiguration,getGenres } from './store/homeSlice';
+import { useSelector, useDispatch } from "react-redux";
+import { getApiConfiguration, getGenres } from "./store/homeSlice";
 
 import Header from "./components/header/Header";
 import Footer from "./components/footer/Footer";
@@ -14,10 +13,9 @@ import SearchResult from "./pages/searchResult/SearchResult";
 import Explore from "./pages/explore/Explore";
 import PageNotFound from "./pages/404/PageNotFound";
 
-// getApiConfiguration
 function App() {
 
-    const {url} = useSelector((state) => state.home)
+  const {url} = useSelector((state) => state.home)
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -38,26 +36,32 @@ function App() {
             dispatch(getApiConfiguration(url));
         });
     };
-    //promise.all for calling multiple api's
+
+    //promises used, when u have multiple api call
     const genresCall = async() => {
-        let promises = [];
-        let endpoints = ["tv","movie"]
-        let allGenres = {}
-        
-        endpoints.forEach((url) => {     //url is iterator name
-          promises.push(fetchDataFromApi(`/genre/${url}/list`))  
-        })
+      let promises = [];
+      let endPoints = ["tv","movie"];
+      let allGenres = {};
 
-        const data = await Promise.all(promises) //promise.all will not return untill it will not get the response of all api calls (currently we have two endpoints)
-        console.log(data);
-        data.map(({genres}) => {       //we will destructure the genres
-            return genres.map((item) => (allGenres[item.id]= item));
-        });
+      endPoints.forEach((url) => {  //url is iterator, accessing values of endpoints array
+        promises.push(fetchDataFromApi(`/genre/${url}/list`));    //pushing in promises the response of all api calls,( means no. of api calls = no. of values in endpoints array)
+      });
 
-        dispatch(getGenres(allGenres));
-    } 
-    return (
-      <BrowserRouter>
+      //  promises.all make sure to get all api responses before moving forward
+      const data = await Promise.all(promises);
+
+      console.log(data);
+
+      data.map(({genres}) => {                //genres is iterator, which contains all no. of api calls data, like in this project -> data of "tv" & "movie"
+        return genres.map((item) => (allGenres[item.id] = item)); //storing data acc. of "tv and movie" in single array
+      })
+      console.log(allGenres)
+      
+      dispatch(getGenres(allGenres));
+    }
+  return (
+    <div>
+        <BrowserRouter>
           <Header/>
           <Routes>
               <Route path="/" element={<Home/>} />
@@ -66,19 +70,10 @@ function App() {
               <Route path="/explore/:mediaType" element={<Explore />} />
               <Route path="*" element={<PageNotFound />} />
           </Routes>
-          <Footer />
-      </BrowserRouter>
-    )
-      
+          <Footer/>
+        </BrowserRouter>
+    </div>
+  )
 }
- 
+
 export default App
-
-
-
-// return (<div className='App'>
-//         App
-//         {url?.total_pages} 
-//         {/* sometime url is undefined bcoz of time taken from api call, so avoid app break we use '?' (optional chaining) */}
-//       </div>
-// )

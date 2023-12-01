@@ -1,0 +1,11 @@
+.genres {
+    display: flex;
+    gap: 5px;
+    .genre{
+        background-color: var(--pink);
+        padding: 3px 5px;
+        font-size: 12px;
+        border-radius: 4px;
+        white-space: nowrap; //if text is long still it shouldn't be break to the next line
+    }
+}

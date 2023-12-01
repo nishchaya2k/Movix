@@ -10,113 +10,108 @@ import ContentWrapper from "../contentWrapper/ContentWrapper";
 import logo from "../../assets/movix-logo.svg";
 
 const Header = () => {
-    const [show, setShow] = useState("top");
-    const [lastScrollY, setLastScrollY] = useState(0);
-    const [mobileMenu, setMobileMenu] = useState(false);
-    const [query, setQuery] = useState("");
-    const [showSearch, setShowSearch] = useState("");
-    const navigate = useNavigate();
-    const location = useLocation();
+  const [show,setShow] = useState("top");               //for scroll effect
+  const [lastScrollY,setLastScrollY] = useState(0);     //
+  const [mobileMenu,setMobileMenu] = useState(false);   //for sidebar
+  const [query,setQuery] = useState("");                //for to text
+  const [showSearch,setShowSearch] = useState("")       //
+  const navigate = useNavigate();
+  const location = useLocation();
 
-    useEffect(() => {       
-      window.scrollTo(0, 0);
-    }, [location]);       //whenever location changes, make sure make sure page start from top
 
-    const controlNavbar = () => {
-      if (window.scrollY > 200) {                                 //window.scroll is property which calculate scroll value
-          if (window.scrollY > lastScrollY && !mobileMenu) {      //when we scroll downside window.scrollY might '==' or 'less then' lastScrollY
-              setShow("hide");
-          } else {
-              setShow("show");
-          }
-      } else {
-          setShow("top");
-      }
-      setLastScrollY(window.scrollY);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);     //when location changes , scroll should  start from top
+
+  const controlNavbar = () => {
+    if (window.scrollY > 200) {
+        if (window.scrollY > lastScrollY && !mobileMenu) {
+            setShow("hide");
+        } else {                                        //when we scroll in downside means we are going up, navbar bacome dark untill > 200 and lessthan lastScrollY
+            setShow("show");
+        }
+    } else {
+        setShow("top");
+    }
+    setLastScrollY(window.scrollY);
+  };
+
+  useEffect(() =>{
+    window.addEventListener("scroll",controlNavbar)
+    return () => {
+      window.removeEventListener("scroll",controlNavbar)      //to prevent memory leakage issue, we will remove the eventlistener
     };
+  },[lastScrollY])
 
-    //whenever u add any event in reactjs, it is the best practice that should remove it also otherwise u can face memory issue
-    useEffect(() => {
-      window.addEventListener("scroll", controlNavbar);  //scroll is event and controlNavbar is method
-      return () => {
-          window.removeEventListener("scroll", controlNavbar);
-      };
-    }, [lastScrollY]);      //whenever we scroll useEffect activated
+  const searchQueryHandler = (event) => {
+    if (event.key === "Enter" && query.length > 0) {
+        navigate(`/search/${query}`);
+        setTimeout(() => {
+            setShowSearch(false);
+        }, 1000);
+    }
+  };
 
-    const searchQueryHandler = (event) => {
-      if (event.key === "Enter" && query.length > 0) {
-          navigate(`/search/${query}`); 
-          setTimeout(() => {  //when we redirect to another page we need to close searchBar after 1 sec (assume)
-              setShowSearch(false);
-          }, 1000);
-      }
-    };
+  const openSearch = () => {
+    setMobileMenu(false)
+    setShowSearch(true)
+  }
 
-    const openSearch = () => {
-      setMobileMenu(false);
-      setShowSearch(true);
-    };
+  const openMobileMenu= () => {
+    setMobileMenu(true)
+    setShowSearch(false)
+  }
 
-    const openMobileMenu = () => {
-        setMobileMenu(true);
-        setShowSearch(false);
-    };
+  const navigationHandler = (type) => {
+    if(type === "movie"){
+      navigate("/explore/tv")
+    }
+    else{
+      navigate("/explore/tv");
+    }
+    setMobileMenu(false);   //in mobile mode, side bar is remained open after we clicked on any of option so we need to close it also
+  }
 
-    const navigationHandler = (type) => {
-      if (type === "movie") {
-          navigate("/explore/movie");
-      } else {
-          navigate("/explore/tv");
-      }
-      setMobileMenu(false);       //after navigate close the MobileMenu
-    };
-
-    return <header className={`header ${mobileMenu ? "mobileView" : ""} ${show}`}>
+  return (
+    <header className={`header ${mobileMenu ? "mobileView":""} ${show}`}>  {/* if mobileMenu is activated means we have clicked sideBar, then css will be displayed acc. to it */}
       <ContentWrapper>
-        {/* image logo */}
-        <div className="logo">
-          <img src={logo} alt="" />
+        <div className="logo" onClick={() => navigate("/")}>
+          <img src = {logo} alt = ""/>
         </div>
-
-        {/* list */}
+        {/* for large screen */}
         <ul className="menuItems">
-          <li className="menuItem" onClick={() => navigationHandler("movie")}>Movies</li>
-          <li className="menuItem" onClick={() => navigationHandler("tv")}>TV Shows</li>
-          <li className="menuItem">
-            <HiOutlineSearch onClick={openSearch}/>
-          </li>
+          <li className="menuItem" onClick={() => navigationHandler("movie")}>
+              Movies</li>
+          <li className="menuItem" onClick={() => navigationHandler("tv")}>
+              TV Shows</li>         
+          <li className="menuItem"><HiOutlineSearch onClick={openSearch}/></li>
         </ul>
 
-        {/* for mobile UI */}
+        {/* for small screen */}
         <div className="mobileMenuItems">
-          <HiOutlineSearch onClick={openSearch} />{/*we need search bar after we click in searchButton */}
-          {mobileMenu ? (
-              <VscChromeClose onClick={() => setMobileMenu(false)} />
-          ) : (
-              <SlMenu onClick={openMobileMenu} />
-          )}
+            <HiOutlineSearch onClick={openSearch}/>
+            {mobileMenu ?
+             (<VscChromeClose onClick={()=>setMobileMenu(false)}/>):
+             (<SlMenu onClick={openMobileMenu}/>)}  { /*we have open the sidebar  */}
+
         </div>
       </ContentWrapper>
 
-      {/* component render when we click on searchBarand showSearch need to be true */}
-      {showSearch && (
-                <div className="searchBar">
-                    <ContentWrapper>
-                        <div className="searchInput">
-                            <input
-                                type="text"
-                                placeholder="Search for a movie or tv show...."
-                                onChange={(e) => setQuery(e.target.value)}
-                                onKeyUp={searchQueryHandler}
-                            />
-                            <VscChromeClose
-                                onClick={() => setShowSearch(false)}
-                            />
-                        </div>
-                    </ContentWrapper>
-                </div>
-            )}
+      {showSearch && (<div className="searchBar">
+        <ContentWrapper>
+          <div className ="searchInput">
+                    <input
+                        type="text"
+                        placeholder='Search for a movie or tv show....'
+                        onChange={(e) => setQuery(e.target.value )} //using callback method we will update query
+                        onKeyUp={searchQueryHandler}
+                    />
+                    <VscChromeClose onClick={()=>setShowSearch(false)}/>
+          </div>
+        </ContentWrapper>
+      </div>)}
     </header>
+  )
 }
 
-export default Header;
+export default Header

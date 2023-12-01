@@ -1,4 +1,3 @@
-//to select any element or any node in the DOM we use it
 import React, { useRef } from "react";
 import {
     BsFillArrowLeftCircleFill,
@@ -6,25 +5,35 @@ import {
 } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import dayjs from "dayjs"; //data given in dd-mm-yy format, to convert into mm dd,yy
 
 import ContentWrapper from "../contentWrapper/ContentWrapper";
 import Img from "../lazyLoadImage/Img";
 import PosterFallback from "../../assets/no-poster.png";
+
+import "./style.scss";
+import useFetch from "../../hooks/useFetch";
+import dayjs from "dayjs";
 import CircleRating from "../circleRating/CircleRating";
 import Genres from "../genres/Genres";
 
-import "./style.scss";
-
 const Carousel = ({ data, loading, endpoint, title }) => {
+
     const carouselContainer = useRef();
-    const { url } = useSelector((state) => state.home);
-    const navigate = useNavigate();     //instance of useNavigate method
+    const {url} = useSelector((state)=>state.home);
+    const navigate = useNavigate();
 
-    //dir is direction of which we scroll the div
     const navigation = (dir) => {
-    };
+        const container = carouselContainer.current;
 
+        const scrollAmount = dir === "left" ? container.scrollLeft - (container.offsetWidth + 20) :  //The HTMLElement.offsetWidth read-only property returns the layout width of an element as an integer + 20 is apprx value of padding and margin
+                                              container.scrollLeft + (container.offsetWidth + 20)   
+        container.scrollTo({
+            left: scrollAmount,  //Specifies the number of pixels along the X axis to scroll the window or element.
+            behavior: "smooth",  //Determines whether scrolling is instant or animates smoothly
+        });
+     }       
+
+    // skeleton, when page is loading
     const skItem = () => {
         return (
             <div className="skeletonItem">
@@ -36,49 +45,51 @@ const Carousel = ({ data, loading, endpoint, title }) => {
             </div>
         );
     };
+    
     return (
         <div className="carousel">
-            <ContentWrapper>
+        <ContentWrapper>
                 {title && <div className="carouselTitle">{title}</div>}
                 <BsFillArrowLeftCircleFill
                     className="carouselLeftNav arrow"
-                    onClick={() => navigation("left")}
+                    onClick = {() => navigation("left")}
                 />
                 <BsFillArrowRightCircleFill
-                    className="carouselRighttNav arrow"
-                    onClick={() => navigation("right")}
+                    className="carouselRightNav arrow"
+                    onClick = {() => navigation("right")}
                 />
                 {!loading ? (
-                    <div className="carouselItems" ref={carouselContainer}>
-                        {data?.map((item) => {
-                            const posterUrl = item.poster_path
-                                ? url.poster + item.poster_path
-                                : PosterFallback;
-                            return (
-                                <div
-                                    key={item.id}
-                                    className="carouselItem">
+                    <div className="carouselItems" ref = {carouselContainer} >
+                                       
+                        {data?.map((item)=>{
+                            const posterUrl = item.poster_path ?
+                                              url.poster + item.poster_path:            //we need three things to build image url, go to app.js file
+                                              PosterFallback
+                            return (  
+                                <div key = {item.id} className="carouselItem" onClick={() => navigate(`/${item.media_type || endpoint}/${ item.id }`)}>
                                     <div className="posterBlock">
-                                        <Img src={posterUrl} />
-                                        <CircleRating rating = {item.vote_average.toFixed(1)}/>
-                                        <Genres item = {item.genre_ids}/>
+                                        <Img src={posterUrl}/>
+                                        <CircleRating rating={item.vote_average.toFixed(1)}/>
+                                        <Genres data = {item.genre_ids.slice(0,2 )}/>
                                     </div>
                                     <div className="textBlock">
                                         <span className="title">
-                                            {item.title || item.name}
+                                            {item.title || item.name} 
                                         </span>
                                         <span className="date">
-                                            {dayjs(item.release_date || item.first_air_date).format(
-                                                "MMM D, YYYY"
-                                            )}
+                                             {
+                                                dayjs(item.release_Date).format("MMM D, YYYY")
+                                             }            
                                         </span>
+
                                     </div>
                                 </div>
-                            );
+                            )
                         })}
                     </div>
-                ) : (
-                    <div className="loadingSkeleton"> {/*while loading, skeleton shown*/}
+                ):( 
+                    <div className="loadingSkeleton">
+                    {/* when page is loading, we will call this method many times */}
                         {skItem()}
                         {skItem()}
                         {skItem()}
@@ -86,12 +97,9 @@ const Carousel = ({ data, loading, endpoint, title }) => {
                         {skItem()}
                     </div>
                 )}
-            </ContentWrapper>
+        </ContentWrapper>
         </div>
-    );
-};
+    )
+}
 
-export default Carousel;
-
-
-//check the differenc in poster path of image or the path we fetched from url, and why we merging it
+export default Carousel

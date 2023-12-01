@@ -8,9 +8,9 @@ import useFetch from '../../../hooks/useFetch'
 import Carousel from '../../../components/carousel/Carousel'
 
 
- const Popular = () => {
+ const TopRated = () => {
     const [endpoint, setEndpoint] = useState("movie");
-    const {data,loading} = useFetch(`/${endpoint}/popular`);   //using template literals     //how it merge with  base url in api.js, ??
+    const {data,loading} = useFetch(`/${endpoint}/top_rated`);   //using template literals     //how it merge with  base url in api.js, ??
 
 
     const onTabChange = (tab) => {
@@ -19,7 +19,7 @@ import Carousel from '../../../components/carousel/Carousel'
     return (
         <div className='carouselSection'>
             <ContentWrapper>
-                <span className="carouselTitle">What's Popular </span>
+                <span className="carouselTitle">Top Rated </span>
                 <SwitchTabs data =  {["Movies","TV Shows"]} onTabChange = {onTabChange}/>
             </ContentWrapper>
             <Carousel data = {data?.results} loading = {loading} endpoint = {endpoint}/>
@@ -27,5 +27,5 @@ import Carousel from '../../../components/carousel/Carousel'
    )
  }
  
- export default Popular
+ export default TopRated
  

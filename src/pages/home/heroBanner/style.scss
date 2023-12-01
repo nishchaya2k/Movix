@@ -1,17 +1,17 @@
-@import "../../../mixins.scss";
-//benefits of using scss, we can do nesting of classes,otherwise we will use . to access nested classes
-//to consume mixins we will use @include
 
-.heroBanner {
+@import "../../../mixins.scss";
+//in scss you can use nesting in classes
+
+.heroBanner{
     width: 100%;
     height: 450px;
     background-color: var(--black);
     display: flex;
     align-items: center;
     position: relative;
-    @include md {
-        height: 700px;
-    }
+    @include md {                   //in mixins we have defined that width >= 768 in md
+        height:700px;               //in md or greater than it height = 700px
+    } 
     .backdrop-img {
         width: 100%;
         height: 100%;
@@ -20,30 +20,31 @@
         left: 0;
         opacity: 0.5;
         overflow: hidden;
-        .lazy-load-image-background {     //added some extra css
+        .lazy-load-image-background{
             width: 100%;
-            height: 100%;
-            img {
+            height:100%;
+            img{
                 width: 100%;
-                height: 100%;
+                height:100%;
                 object-fit: cover;
                 object-position: center;
             }
         }
     }
-    .opacity-layer {
+    .opacity-layer{
         width: 100%;
         height: 250px;
         background: linear-gradient(
             180deg,
-            rgba(4, 21, 45, 0) 0%,
+            rgba(4,21,45,0) 0%,
             #04152d 79.17%
         );
+
         position: absolute;
         bottom: 0;
         left: 0;
     }
-    .heroBannerContent {
+    .heroBannerContent{
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -51,8 +52,8 @@
         text-align: center;
         position: relative;
         max-width: 800px;
-        margin: 0 auto;
-        .title {
+        margin:0 auto;
+        .title{
             font-size: 50px;
             font-weight: 700;
             margin-bottom: 10px;
@@ -61,12 +62,12 @@
                 font-size: 90px;
             }
         }
-        .subTitle {
+        .subTitle{
             font-size: 18px;
             font-weight: 500;
             margin-bottom: 40px;
-            @include md {
-                font-size: 24px;
+            @include md{
+                font-size:24px;
             }
         }
         .searchInput {
@@ -89,7 +90,7 @@
                     padding: 0 30px;
                 }
             }
-            button {
+            button{
                 width: 100px;
                 height: 50px;
                 background: var(--gradient);
@@ -99,12 +100,14 @@
                 border-radius: 0 30px 30px 0;
                 font-size: 16px;
                 cursor: pointer;
-                @include md {
+                @include md{
                     width: 150px;
                     height: 60px;
                     font-size: 18px;
                 }
             }
+
+
         }
     }
 }
