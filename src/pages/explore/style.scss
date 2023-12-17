@@ -1,5 +1,9 @@
 @import "../../mixins.scss";
 .explorePage {
+
+
+    
+
     min-height: 700px;
     padding-top: 100px;
     .resultNotFound {
@@ -24,14 +28,29 @@
             margin-bottom: 0;
         }
     }
+
     .filters {
-        display: flex;
-        gap: 10px;
-        flex-direction: column;
+        
+        flex-direction: row;
+        gap: 20px;
         @include md {
+            display: flex;
             flex-direction: row;
         }
+        // .mood{
+        //     white-space: nowrap;   
+        //     display: flex;
+        //     align-items: center;
+        //     color: white;
+        //     font-size: 18px;
+        // }
         .react-select-container {
+
+            //when screen is small, there should be gap between 2 select options
+            @include small{
+                margin-top: 8px;
+            }
+
             &.genresDD {
                 width: 100%;
                 @include md {

@@ -9,12 +9,16 @@ const Recommendation = ({ mediaType, id }) => {
     );
 
     return (
+        <div>
+        { data?.results.length>0 &&      //if no recommendation are there we will not show anything
         <Carousel
             title="Recommendations"
             data={data?.results}
             loading={loading}
             endpoint={mediaType}
         />
+        }
+        </div>
     );
 };
 

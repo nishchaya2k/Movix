@@ -1,0 +1,62 @@
+.mood{
+    position: fixed;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 4;
+    // #a8a6a396
+    height: 550px;
+    width: 500px;
+}
+
+.categoryImage{
+    height: 90%;
+    width: 100%;
+    border-radius: 50%;
+    background-color: #173564a1 ;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 80px;
+    
+    .imagesDiv{
+        border: 50px black;
+        cursor: pointer;
+        height: 100px;       //decide the width and height for particular image div
+        width: 103px;
+        display: flex;
+        justify-content: center;
+        .moodImage{
+            height: 100%;   //assign dimensions full 100%
+            width: 100%;
+            object-fit: cover;
+        }
+    }
+}
+
+.centerImages{
+    display: flex;
+    gap: 90px;
+}
+
+.skip{
+    font-weight:bold;
+    font-size: 18px;
+    display: flex;
+    justify-content: center;
+    margin-top:3px ;
+    cursor: pointer;
+    color: wheat;
+    :hover{
+        color: rgb(159, 113, 29);
+    }
+}
+
+.rightShift{
+    position: absolute;
+}
+
+
+//add naming card near photo, like near sad photo when we hover, sad text should visible
+//confused!! Tell me your mood ? I'll help you to search! 

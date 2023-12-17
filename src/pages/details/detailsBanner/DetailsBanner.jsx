@@ -14,6 +14,7 @@ import VideoPopup from '../../../components/videoPopup/VideoPopup';
 import { useState } from 'react';
 
 const DetailsBanner = ({video,crew}) => {
+
  
     const {mediaType, id}  = useParams();   //why mediaType and id, becoz in app.js we have passed the same
     const {data,loading} = useFetch(`/${mediaType}/${id}`)      //fetching data for details
@@ -24,7 +25,7 @@ const DetailsBanner = ({video,crew}) => {
     const {url} = useSelector((state) => state.home)
     const _genres = data?.genres?.map((g) => g.id);
 
-    const director = crew?.filter((f) => f.job === "Director");
+    const director = crew?.filter((f) => f.job === "Director"); //f is iterator
     const writer = crew?.filter((f) => f.job === "Screenplay" || f.job ==="Story" || f.job === "Writer")
 
  
